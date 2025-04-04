@@ -1,4 +1,4 @@
-html{
+html {
 	font-size: 100%;
 	box-sizing: border-box;
 	scroll-behavior: smooth;
@@ -6,31 +6,36 @@ html{
 	font-family: 'Barlow', sans-serif;
 	letter-spacing: .1em;
 }
-body{
+
+body {
 	z-index: 2;
 	margin: 0px;
 	padding: 0px;
 	height: 200vh;
 	min-width: 500px;
-	width:100vw;
+	width: 100vw;
 	position: relative;
 	background-color: black !important;
 }
-ul{
+
+ul {
 	list-style-type: none;
 }
-.btn-primary{
-	width:100%;
+
+.btn-primary {
+	width: 100%;
 }
-#structure-box{
+
+#structure-box {
 	position: absolute;
-    width:80vw;
-    min-height: 5vh;
+	width: 80vw;
+	min-height: 5vh;
 	left: 100px;
 	top: 100px;
 }
-.structure-element{
-	width:20%;
+
+.structure-element {
+	width: 20%;
 	height: 100%;
 	background-color: rgb(31, 20, 0);
 	border-color: #c06400;
@@ -39,57 +44,84 @@ ul{
 	color: #c06400;
 	border-style: dashed;
 }
-.dropdown-menu, .dropdown-submenu{
+
+.dropdown-menu,
+.dropdown-submenu {
 	background-color: rgb(31, 20, 0) !important;
 	color: #c06400 !important;
 }
-.dropdown-menu{
+
+.dropdown-menu {
 	border-style: dashed !important;
 	border-width: 2px !important;
 	border-color: #c06400 !important;
 	background-clip: border-box !important;
 }
-.dropdown-submenu a{
+
+.dropdown-submenu a {
 	color: #c06400 !important;
 }
-.dropdown-menu > .active > a{
+
+.dropdown-menu>.active>a {
 	background-color: rgb(70, 37, 2) !important;
 }
-.dropdown-menu > li > a:focus{
+
+.dropdown-menu>li>a:focus {
 	background-color: black !important;
 }
-.dropdown-menu >li{
-	border:none !important;
+
+.dropdown-menu>li {
+	border: none !important;
 }
-.inactive{
+
+.inactive {
 	display: none;
 }
-.structure-container{
+
+.structure-container {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 	height: 3vh;
 }
-.structure-dfield{
+
+.structure-dfield {
 	position: relative;
 	width: 80%;
-	height:100%;
+	height: 100%;
 	background-color: black;
 	align-content: center;
 	align-items: center;
 }
-.structure-dfield > div> p{
-	color:black;
+
+.structure-dfield>div>p {
+	color: black;
 	border: none;
 	/* border-right: 5px dotted #c06400; */
 }
-#dfield-header{
+
+#dfield-header {
 	height: 12vh;
-	width:100%;
+	width: 100%;
 }
-#dfield-header p{
-	color: #c06400 ;
+
+#dfield-header p {
+	color: #c06400;
 }
-#header-labels p{
-	text-decoration:underline;
+
+#header-labels p {
+	text-decoration: underline;
+}
+
+.deleteStructureButton {
+	height: 50%;
+	margin: 0 auto;
+	aspect-ratio: 1;
+	left: -2vh;
+	position: absolute;
+	opacity: 0;
+	object-fit: fill;
+}
+.deleteStructureButton:hover{
+	opacity: 1;
 }

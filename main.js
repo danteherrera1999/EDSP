@@ -940,6 +940,7 @@ const trackedDataAlias = ['Tier 2', 'Tier 3', 'Security', 'Tech Level', 'Wealth'
 trackedDataSumType = ['sum', 'sum', 'sum', 'sum', 'sum', 'sum', 'sum', 'none', 'mode', 'sum', 'sum']
 const starports = ['Coriolis', 'Asteroid Base', 'Ocellus', 'Orbis', 'Planetary Port'];
 const params = new URLSearchParams(document.location.search);
+var systemStateHistory = [];
 class layeredDropdown {
 	constructor(dropdown_dict, parent = null, element = null) {
 		this.parent = parent;
@@ -1042,6 +1043,11 @@ class structureElement extends layeredDropdown {
 		const newBtn = document.createElement("button");
 		const newSpan = document.createElement('span');
 		const confBtn = document.createElement("button");
+		const delBtn = document.createElement("img");
+		delBtn.setAttribute("src", "x.png")
+		delBtn.classList.add("deleteStructureButton")
+		delBtn.addEventListener("click",()=>{this.structureBox.deleteStructure(this)})
+		this.element.appendChild(delBtn);
 		confBtn.setAttribute('style', 'padding:0;height:100%;width:10%;top:0;margin:0;border:none;background:rgba(0,0,0,0);');
 		confBtn.innerHTML = `${this.structureBox.totalStructures}.`;
 		confBtn.classList.add("menu-icon");
@@ -1069,7 +1075,7 @@ class structureElement extends layeredDropdown {
 					//cells[i].style.backgroundColor = 'black';
 				}
 				else {
-					cells[i].style.backgroundColor = (newData>0)? "rgba(51, 255, 75, 1)":"rgba(255, 51, 51, 1)";
+					cells[i].style.backgroundColor = (newData > 0) ? "rgba(51, 255, 75, 1)" : "rgba(255, 51, 51, 1)";
 					//cells[i].style.backgroundColor = 'black';
 				}
 			}
@@ -1097,8 +1103,8 @@ class structureElement extends layeredDropdown {
 	propogateData(data) {
 		this.update(data, true);
 	}
-	update(newData, updateHeader = false,noUpdate=false) {
-		if (this.data == null & noUpdate==false) { this.structureBox.addStructure() };
+	update(newData, updateHeader = false, noUpdate = false) {
+		if (this.data == null & noUpdate == false) { this.structureBox.addStructure() };
 		this.name = newData["name"];
 		this.data = newData["data"];
 		this.element.querySelector("p").innerHTML = this.name;
@@ -1114,6 +1120,7 @@ class structureBox {
 		this.structures = [];
 		this.totalStructures = 0;
 		this.headerData = this.generateHeader();
+		this.initializeStructureBox();
 	}
 	addStructure() {
 		const container = document.createElement("div");
@@ -1173,7 +1180,7 @@ class structureBox {
 		}
 		return headerData;
 	}
-	updateHeaderData() {
+	updateHeaderData(noURLUpdate=false) {
 		this.updateStarportCosts();
 		const cells = this.headerData.children;
 		for (let i = 0; i < cells.length; i++) {
@@ -1202,7 +1209,7 @@ class structureBox {
 			}
 			cells[i].innerHTML = newData;
 		}
-		this.updateURL();
+		if (noURLUpdate!=true){this.updateURL()};
 	}
 	updateStarportCosts() {
 		for (let i = 1; i < this.structures.length - 1; i++) {
@@ -1215,8 +1222,8 @@ class structureBox {
 				}
 				N = Math.floor(N / 2);
 				var newData = { ...this.structures[i].data };
-				if (newData['T3'] > 0) { newData['T2'] = -3 * (N+1) }
-				else { newData['T3'] = -6 * (N+1) }
+				if (newData['T3'] > 0) { newData['T2'] = -3 * (N + 1) }
+				else { newData['T3'] = -6 * (N + 1) }
 				this.structures[i].update({ 'name': this.structures[i].name, "data": newData });
 			}
 		}
@@ -1227,29 +1234,63 @@ class structureBox {
 			this.structures[0].update({ 'name': this.structures[0].name, "data": newData });
 		}
 	}
-	updateURL(){
-		var structure_string = this.structures.slice(0,-1).map((structure)=>symbol_map[structure.name]["symbol"]).join('');
-		params.set("s",structure_string);
-		console.log(params)
+	updateURL() {
+		var structure_string = this.structures.slice(0, -1).map((structure) => symbol_map[structure.name]["symbol"]).join('');
+		params.set("s", structure_string);
 		const newUrl = `${window.location.pathname}?${params.toString()}`;
 		window.history.pushState({ path: newUrl }, '', newUrl);
+		if (systemStateHistory[0]!=structure_string){systemStateHistory.push(structure_string)};
+	}
+	deleteStructure(target){
+		const delN = this.structures.indexOf(target);
+		if (target.name!=null){
+			this.structures.splice(delN,1)
+			target.container.remove();
+			for (let i=delN;i<this.structures.length;i++){
+				this.structures[i].element.id = `structure-${i}`;
+				this.structures[i].container.id = `structureContainer-${i}`;
+				this.structures[i].element.querySelector("button").innerHTML=`${i+1}.`;
+			};
+			this.updateHeaderData();
+		}
+	}
+	initializeStructureBox(){
+		const initString = params.get('s');
+		if (initString != null) {
+			for (let i = 0; i < initString.length; i++) {
+				Object.entries(symbol_map).forEach(([key, value]) => {
+					if (initString[i] == value['symbol']) {
+						const newStuct = this.addStructure();
+						newStuct.update({ "name": key, "data": symbol_map[key]["data"]["data"] }, false, true)
+					}
+				})
+			}
+		};
+		this.addStructure()
+		this.updateHeaderData();
+	}
+	deleteAllStructures(noURLUpdate=false){
+		this.structures.forEach((structure)=>structure.container.remove())
+		this.structures = [];
+		this.totalStructures = 0;
+		if (noURLUpdate!=true){this.updateURL()};
+	}
+	revert(){
+		if (systemStateHistory.length>1){
+			this.deleteAllStructures(true);
+			params.set("s", systemStateHistory.splice(-2,2)[0]);
+			const newUrl = `${window.location.pathname}?${params.toString()}`;
+			window.history.pushState({ path: newUrl }, '', newUrl);
+			this.initializeStructureBox();
+		}
 	}
 }
 
-function InitializePage(AllStructures){
-	const initString = params.get('s');
-	console.log(initString);
-	if (initString!=null){
-		for (let i=0;i<initString.length;i++){
-			Object.entries(symbol_map).forEach(([key,value])=>{if(initString[i]==value['symbol']){
-				const newStuct = AllStructures.addStructure();
-				newStuct.update({"name":key,"data":symbol_map[key]["data"]["data"]},false,true)
-			}})
-		}
-	};
-	AllStructures.addStructure()
-	AllStructures.updateHeaderData();
-}
 
 var AllStructures = new structureBox(document.getElementById("structure-box"))
-InitializePage(AllStructures);
+
+document.addEventListener('keydown', function(event) {
+	if (event.ctrlKey && event.key === 'z') {
+	  AllStructures.revert();
+	}
+  });
