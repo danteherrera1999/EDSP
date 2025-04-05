@@ -1224,7 +1224,7 @@ class structureBox {
 				}
 				N = Math.floor(N / 2);
 				var newData = { ...this.structures[i].data };
-				if (newData['T3'] > 0) { newData['T2'] = -3 * (N + 1) }
+				if (newData['T3'] > 0) { newData['T2'] = -3 - 2* (N) }
 				else { newData['T3'] = -6 * (N + 1) }
 				this.structures[i].update({ 'name': this.structures[i].name, "data": newData });
 			}
