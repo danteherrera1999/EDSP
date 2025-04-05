@@ -1120,6 +1120,7 @@ class structureBox {
 		this.structures = [];
 		this.totalStructures = 0;
 		this.headerData = this.generateHeader();
+		this.systemName = document.getElementById("system-name");
 		this.initializeStructureBox();
 	}
 	addStructure() {
@@ -1236,6 +1237,7 @@ class structureBox {
 	}
 	updateURL() {
 		var structure_string = this.structures.slice(0, -1).map((structure) => symbol_map[structure.name]["symbol"]).join('');
+		params.set("n",this.systemName.value)
 		params.set("s", structure_string);
 		const newUrl = `${window.location.pathname}?${params.toString()}`;
 		window.history.pushState({ path: newUrl }, '', newUrl);
@@ -1256,6 +1258,8 @@ class structureBox {
 	}
 	initializeStructureBox(){
 		const initString = params.get('s');
+		const initName = params.get('n');
+		if (initName!=null){this.systemName.value=initName};
 		if (initString != null) {
 			for (let i = 0; i < initString.length; i++) {
 				Object.entries(symbol_map).forEach(([key, value]) => {
@@ -1279,6 +1283,7 @@ class structureBox {
 		if (systemStateHistory.length>1){
 			this.deleteAllStructures(true);
 			params.set("s", systemStateHistory.splice(-2,2)[0]);
+			params.set("n",this.systemName.value);
 			const newUrl = `${window.location.pathname}?${params.toString()}`;
 			window.history.pushState({ path: newUrl }, '', newUrl);
 			this.initializeStructureBox();
@@ -1291,6 +1296,9 @@ var AllStructures = new structureBox(document.getElementById("structure-box"))
 
 document.addEventListener('keydown', function(event) {
 	if (event.ctrlKey && event.key === 'z') {
-	  AllStructures.revert();
+		event.preventDefault();
+	  	AllStructures.revert();
 	}
   });
+
+document.getElementById("system-name").addEventListener("focusout",()=>{AllStructures.updateURL()})
