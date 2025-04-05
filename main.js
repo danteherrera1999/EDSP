@@ -1048,15 +1048,16 @@ class structureElement extends layeredDropdown {
 		delBtn.classList.add("deleteStructureButton")
 		delBtn.addEventListener("click",()=>{this.structureBox.deleteStructure(this)})
 		this.element.appendChild(delBtn);
-		confBtn.setAttribute('style', 'padding:0;height:100%;width:10%;top:0;margin:0;border:none;background:rgba(0,0,0,0);');
+		confBtn.setAttribute('style', 'padding:0;height:100%;width:10%;top:0;margin:0;border:none;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;');
 		confBtn.innerHTML = `${this.structureBox.totalStructures}.`;
 		confBtn.classList.add("menu-icon");
 		confBtn.addEventListener("mousedown", (e) => this.handleConfigure(e))
 		this.element.setAttribute("style", "display:flex;flex-direction:row;align-items:center")
-		newP.setAttribute('style', 'padding:0;width:80%;border:none;text-align:center;margin:0;');
-		newBtn.setAttribute('style', 'padding:0;height:100%;width:10%;top:0;margin:0;border:none;background:rgba(0,0,0,0);');
+		newP.setAttribute('style', 'padding:0;width:80%;border:none;text-align:center;margin:0;font-size:calc(3vw/3.5);white-space:nowrap;overflow:hidden;');
+		newBtn.setAttribute('style', 'padding:0;height:100%;width:10%;top:0;margin:0;border:none;background:rgba(0,0,0,0);display:flex;flex-direction:column;justify-content:center;');
 		newBtn.setAttribute('data-toggle', "dropdown")
 		newSpan.classList.add('caret');
+		newSpan.setAttribute("style","font-size:2em;")
 		newBtn.appendChild(newSpan);
 		newBtn.addEventListener("click", () => { this.menu.style.display = "block"; newBtn.setAttribute("aria-expanded", "true"); this.element.classList.add("open", "active") });
 		this.element.appendChild(confBtn);
@@ -1094,7 +1095,7 @@ class structureElement extends layeredDropdown {
 			const newContainer = document.createElement('div');
 			newContainer.setAttribute("style", `width: ${cellWidth}%;margin:0;height:100%;display:flex;align-items:center;`);
 			const newCell = document.createElement('p');
-			newCell.setAttribute("style", `margin:0; width:100%;text-align:center;height:fit-content;`);
+			newCell.setAttribute("style", `margin:0; width:100%;text-align:center;height:fit-content;font-size:1vw`);
 			newContainer.appendChild(newCell);
 			newDField.appendChild(newContainer);
 		}

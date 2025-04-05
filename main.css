@@ -1,9 +1,15 @@
+@font-face {  
+	font-family: "Eurostile";  
+	font-weight:bold;
+	src: url(fonts/EurostileLTStd-Bold.eot); /* IE */  
+	src: local("Eurostile"), url(fonts/EurostileLTStd-Bold.otf) format("opentype"); /* non-IE */  
+  }
 html {
 	font-size: 100%;
 	box-sizing: border-box;
 	scroll-behavior: smooth;
 	position: absolute;
-	font-family: 'Barlow', sans-serif;
+	font-family: 'Eurostile','Barlow', sans-serif;
 	letter-spacing: .1em;
 }
 
@@ -12,10 +18,23 @@ body {
 	margin: 0px;
 	padding: 0px;
 	height: 200vh;
+	font-family: 'Eurostile','Barlow', sans-serif !important;
 	min-width: 500px;
 	width: 100vw;
 	position: relative;
 	background-color: black !important;
+}
+
+#ribbon{
+	left:0;
+	top:0;
+	white-space:nowrap;
+}
+
+#ribbon h1{
+	color:#c06400;
+	margin-left: 2vw;
+	overflow: hidden;
 }
 
 ul {
@@ -43,6 +62,7 @@ ul {
 	border-width: 2px;
 	color: #c06400;
 	border-style: dashed;
+	margin-right: 10px;
 }
 
 .dropdown-menu,
@@ -97,8 +117,9 @@ ul {
 .structure-dfield>div>p {
 	color: black;
 	border: none;
-	/* border-right: 5px dotted #c06400; */
 }
+
+
 
 #dfield-header {
 	height: 20vh;
@@ -134,7 +155,7 @@ ul {
 	border:none;
 	position: absolute;
 	padding:0;
-	font-size: 3.5em;
+	font-size: min(calc(100vw/35),calc(100vh/15));
 	text-align: center;
 	text-decoration: underline;
 }
