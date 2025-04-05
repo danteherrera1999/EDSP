@@ -1222,10 +1222,11 @@ class structureBox {
 						N += 1;
 					}
 				}
-				N = Math.floor(N / 2);
+				N = Math.max(0,N-1);
+				console.log(N);
 				var newData = { ...this.structures[i].data };
-				if (newData['T3'] > 0) { newData['T2'] = -3 - 2* (N) }
-				else { newData['T3'] = -6 * (N + 1) }
+				if (newData['T3'] > 0) { newData['T2'] = -3 - 2 * N }
+				else { newData['T3'] = -6 - 6 * N }
 				this.structures[i].update({ 'name': this.structures[i].name, "data": newData });
 			}
 		}
